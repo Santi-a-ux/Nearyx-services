@@ -5,3 +5,4 @@ export const ROLES = Object.freeze({
 });
 
 export const isValidRole = (role) => Object.values(ROLES).includes(role);
+export const isSelfRegisterRole = (role) => role === ROLES.STUDENT || role === ROLES.TUTOR;

@@ -9,9 +9,7 @@ function required(name) {
 
 // En producción JWT_SECRET es obligatorio; el valor por defecto solo existe para desarrollo local.
 function jwtSecret() {
-  if (process.env.JWT_SECRET) return process.env.JWT_SECRET;
-  if (process.env.NODE_ENV === 'production') throw new Error('Missing required environment variable: JWT_SECRET');
-  return 'super-secret-key-change-in-production';
+  return required('JWT_SECRET');
 }
 
 export const config = {

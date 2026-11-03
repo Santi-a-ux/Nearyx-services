@@ -1,4 +1,4 @@
-import { isValidRole } from '../../domain/entities/roles.js';
+import { isSelfRegisterRole } from '../../domain/entities/roles.js';
 import {
   InvalidRoleError,
   EmailAlreadyRegisteredError,
@@ -18,7 +18,7 @@ export class AuthService {
   }
 
   async register({ email, password, role }) {
-    if (!isValidRole(role)) throw new InvalidRoleError();
+    if (!isSelfRegisterRole(role)) throw new InvalidRoleError();
     if (await this.userRepository.findByEmail(email)) throw new EmailAlreadyRegisteredError();
 
     const user = await this.userRepository.create({
