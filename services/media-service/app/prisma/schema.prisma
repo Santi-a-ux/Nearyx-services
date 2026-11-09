@@ -1,0 +1,60 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+  binaryTargets   = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+  schemas   = ["feed", "media"]
+}
+
+model Publication {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  authorId     String    @map("author_id") @db.Uuid
+  authorName   String    @map("author_name") @db.VarChar(120)
+  authorAvatar String?   @map("author_avatar") @db.VarChar(500)
+  authorRole   String?   @map("author_role") @db.VarChar(30)
+  content      String
+  imageUrl     String?   @map("image_url") @db.VarChar(500)
+  state        String    @default("active") @db.VarChar(20)
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  comments     Comment[]
+
+  @@index([createdAt(sort: Desc)], map: "idx_posts_created")
+  @@index([state, createdAt(sort: Desc)], map: "idx_posts_state_created")
+  @@map("posts")
+  @@schema("feed")
+}
+
+model Comment {
+  id           String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  postId       String      @map("post_id") @db.Uuid
+  authorId     String      @map("author_id") @db.Uuid
+  authorName   String      @map("author_name") @db.VarChar(120)
+  authorAvatar String?     @map("author_avatar") @db.VarChar(500)
+  content      String
+  state        String      @default("active") @db.VarChar(20)
+  createdAt    DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  post         Publication @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId, createdAt], map: "idx_comments_post_created")
+  @@map("comments")
+  @@schema("feed")
+}
+
+model StoredFile {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId     String    @map("user_id") @db.Uuid
+  fileUrl    String    @map("file_url") @db.VarChar(500)
+  fileType   String    @map("file_type") @db.VarChar(50)
+  fileSize   Int       @map("file_size")
+  bucketPath String    @map("bucket_path") @db.VarChar(500)
+  createdAt  DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@map("files")
+  @@schema("media")
+}
