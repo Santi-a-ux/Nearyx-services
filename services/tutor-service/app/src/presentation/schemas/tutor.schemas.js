@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import { uuid, queryBool, optionalNumber, optionalInt, pagination } from './common.schemas.js';
 
-// NUMERIC(10,2): accepts a number or a numeric string, keeps it as a string for the database.
 const hourlyRate = z
   .union([z.number(), z.string().regex(/^-?\d+(\.\d+)?$/, 'Input should be a valid decimal')])
   .transform(String)

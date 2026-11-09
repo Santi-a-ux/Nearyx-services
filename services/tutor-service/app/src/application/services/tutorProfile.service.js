@@ -20,8 +20,6 @@ export class TutorProfileService {
     const profile = await this.#requireProfile(userId, 'Profile not found');
     const { coordinatesChanged, profileTextChanged } = profile.applyChanges(changes);
 
-    // The embedding is recomputed only when specialties/categories changed. If the model is down the old
-    // embedding is kept (it would otherwise be wiped); `npm run backfill:embeddings` fixes it later.
     const { ok, embedding } = profileTextChanged ? await this.#embedProfile(profile) : { ok: false };
     return this.profileRepository.update(profile, {
       coordinatesChanged,

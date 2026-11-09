@@ -11,7 +11,6 @@ import { ChatController } from './presentation/controllers/chat.controller.js';
 import { createAuthenticate } from './presentation/middlewares/authenticate.js';
 import { createChatRouter } from './presentation/routes/chat.routes.js';
 
-// Composition root: the only place where layers are wired together.
 export function buildContainer() {
   const broker = new RedisBroker(config.redisUrl);
   const userChannels = new UserChannels({ broker });

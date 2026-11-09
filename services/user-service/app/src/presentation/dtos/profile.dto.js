@@ -9,7 +9,6 @@ export const toProfileDto = (p) => ({
   updated_at: p.updatedAt,
 });
 
-// snake_case request body -> camelCase application input
 export const toProfileInput = (body) => ({
   displayName: body.display_name,
   bio: body.bio,

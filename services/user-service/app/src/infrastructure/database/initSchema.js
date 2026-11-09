@@ -1,7 +1,5 @@
 import { pool } from './pool.js';
 
-// Same DDL SQLAlchemy's create_all produced for users.profiles (the Python service relied on
-// scripts/init-db.sql for the schema itself).
 const DDL = `
 CREATE SCHEMA IF NOT EXISTS users;
 

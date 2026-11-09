@@ -16,7 +16,6 @@ export class VerificationController {
 
   list = async (req, res) => {
     const { status, limit, offset } = req.valid.query;
-    // Same as FastAPI's Query('pending'): absent -> pending, empty -> no filter.
     const statusFilter = status === undefined ? 'pending' : status || null;
     const { requests, total } = await this.service.list(statusFilter, limit, offset);
     res.json({ requests: requests.map(toVerificationDto), total });

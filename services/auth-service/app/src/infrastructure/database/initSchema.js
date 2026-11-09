@@ -1,6 +1,5 @@
 import { pool } from './pool.js';
 
-// Equivalent of SQLAlchemy's Base.metadata.create_all() on startup.
 const DDL = `
 CREATE SCHEMA IF NOT EXISTS authe;
 

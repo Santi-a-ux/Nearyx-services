@@ -11,7 +11,6 @@ import { ProfileImageController } from './presentation/controllers/profileImage.
 import { createAuthenticate } from './presentation/middlewares/authenticate.js';
 import { createProfileRouter } from './presentation/routes/profile.routes.js';
 
-// Composition root: the only place where layers are wired together.
 export function buildContainer() {
   const profileRepository = new ProfileRepository(pool);
   const imageStorage = new SupabaseStorage(config.supabase);

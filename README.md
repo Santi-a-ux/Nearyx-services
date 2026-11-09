@@ -1,145 +1,74 @@
-# Nearyx — Plataforma de Expertos y Estudiantes
+# Nearyx — Backend
 
-Arquitectura de microservicios para conectar estudiantes con expertos (mapa, feed, chat y reservas).
+API de microservicios para conectar estudiantes con expertos en Medellín (feed, chat, reservas, mapa).
 
-Repositorio de referencia: [Nearyx_Working](https://github.com/Santi-a-ux/Nearyx_Working)
+## Despliegue
+| | Link |
+|---|---|
+| API (gateway) | https://TU-GATEWAY.onrender.com |
+| Frontend | https://TU-FRONT.vercel.app |
+| Repositorio frontend | https://github.com/TU-USUARIO/TU-FRONT |
 
-## Stack tecnológico
+## Capturas
+Guarda las imágenes en `docs/screenshots/`.
 
-| Capa | Tecnología |
-|------|-----------|
-| Frontend | Next.js 16 + TypeScript + Tailwind + shadcn/ui |
-| Backend | FastAPI + Python 3.12 |
-| Base de datos | PostgreSQL 16 + PostGIS 3.4 |
-| Cache | Redis 7 |
-| Storage | Supabase Storage |
-| Mapas | Mapbox GL JS |
-| Email | Resend |
-| Contenedores | Docker + docker-compose |
+| Swagger / Postman | Base de datos (Supabase) |
+|---|---|
+| ![API](docs/screenshots/api.png) | ![DB](docs/screenshots/db.png) |
 
-## Servicios
+## Stack
+Node.js 20 · Express 5 · TypeScript (media-service) · Prisma · PostgreSQL (Supabase) · Supabase Storage · JWT + bcrypt · Redis · Docker
+
+## Arquitectura
+Cada servicio sigue las capas `domain → application → infrastructure → interface`.
 
 | Servicio | Puerto | Responsabilidad |
-|----------|--------|----------------|
-| Frontend | 3000 | Next.js app |
-| API Gateway | 8000 | Routing, auth check, rate limiting |
-| Auth Service | 8001 | JWT, registro, login |
-| User Service | 8002 | Perfiles de usuario |
-| Tutor Service | 8003 | Perfiles y disponibilidad de expertos |
-| Geo Service | 8004 | Búsqueda geoespacial |
-| Chat Service | 8005 | Mensajería en tiempo real |
-| Media Service | 8006 | Upload de archivos |
-| Booking Service | 8007 | Reservas de sesiones |
+|---|---|---|
+| gateway | 8000 | Enrutamiento y verificación de token |
+| auth-service | 8001 | Registro, login, JWT |
+| user-service | 8002 | Perfiles |
+| tutor-service | 8003 | Expertos y verificación |
+| geo-service | 8004 | Geocodificación |
+| chat-service | 8005 | Mensajería en tiempo real |
+| media-service (TS) | 8006 | Publicaciones, comentarios, imágenes |
+| booking-service | 8007 | Reservas |
 
-## Instalación rápida
-
-### 1. Clonar y configurar
-
+## Instalación
 ```bash
-git clone https://github.com/Santi-a-ux/Nearyx_Working.git
-cd Nearyx_Working
+git clone https://github.com/TU-USUARIO/TU-BACKEND.git
+cd TU-BACKEND/services/auth-service/app
+cp .env.example .env      # completa los valores
+npm install
+npm run seed              # crea los usuarios de prueba
+npm run dev
+```
+Repite `cp .env.example .env`, `npm install` y `npm run dev` en cada servicio. Para media-service: `npx prisma generate` y `npm run db:seed`.
+
+## Variables de entorno
+| Variable | Servicio | Descripción |
+|---|---|---|
+| `DATABASE_URL` | todos | Conexión PostgreSQL |
+| `JWT_SECRET` | todos | Mismo valor en todos los servicios, sin valor por defecto |
+| `JWT_ACCESS_TOKEN_EXPIRE_MINUTES` | auth | Vigencia del token (30) |
+| `SUPABASE_URL`, `SUPABASE_KEY`, `SUPABASE_BUCKET` | media, user | Subida de imágenes |
+
+## Credenciales de prueba (creadas por el seed)
+| Rol | Correo | Contraseña |
+|---|---|---|
+| admin | admin@nearyx.dev | Admin12345! |
+| student | estudiante@nearyx.dev | Estudiante12345! |
+| tutor | experto@nearyx.dev | Experto12345! |
+
+El admin no se registra desde la API: solo lo crea el seed.
+
+## Pruebas
+```bash
+cd services/media-service/app && npm test
 ```
 
-```bash
-# Ejemplo mínimo:
-# .env
-#   MAPBOX_PUBLIC_TOKEN=pk.tu_token_aqui
-#   NEXT_PUBLIC_MAPBOX_TOKEN=pk.tu_token_aqui
-# frontend/.env.local
-#   NEXT_PUBLIC_API_URL=http://localhost:8000
-#   INTERNAL_API_URL=http://localhost:8000
-#   NEXT_PUBLIC_WS_URL=ws://localhost:8000
-```
-
-Edita `.env` y `frontend/.env.local` con tus valores reales (sobre todo **Mapbox** y `JWT_SECRET`).
-
-#### Mapbox (obligatorio para `/explore`)
-
-1. Crea un token público en [Mapbox Access Tokens](https://account.mapbox.com/access-tokens/) (empieza por `pk.`).
-2. En **`.env`** (raíz), asigna el **mismo** token a las dos variables:
-
-   ```env
-   MAPBOX_PUBLIC_TOKEN=pk.tu_token_aqui
-   NEXT_PUBLIC_MAPBOX_TOKEN=pk.tu_token_aqui
-   ```
-
-3. Repite en `frontend/.env.local` si desarrollas sin Docker.
-4. **Guarda** los archivos antes de levantar Docker (si el editor no guarda, el contenedor leerá valores viejos).
-
-**No uses** placeholders como `your_mapbox_public_token` ni `tu_token_mapbox`.
-
-Tras cambiar el token, reconstruye el frontend:
-
-```bash
-docker compose build frontend --no-cache
-docker compose up -d --force-recreate frontend
-```
-
-Comprueba que el servidor ve el token:
-
-```bash
-curl http://localhost:3000/api/config/public
-# Debe incluir "mapboxConfigured":true
-```
-
-### 2. Levantar infraestructura base
-
-```bash
-docker-compose up -d postgres redis
-bash scripts/verify-step1.sh
-```
-
-### 3. Levantar todos los servicios
-
-```bash
-docker compose up --build -d
-```
-
-App: http://localhost:3000 — Mapa: http://localhost:3000/explore
-
-### 4. Verificar health checks
-
-```bash
-curl http://localhost:8000/health  # Gateway
-curl http://localhost:8001/health  # Auth
-curl http://localhost:8002/health  # Users
-curl http://localhost:8003/health  # Tutors
-curl http://localhost:8004/health  # Geo
-curl http://localhost:8005/health  # Chat
-curl http://localhost:8006/health  # Media
-curl http://localhost:8007/health  # Bookings
-```
-
-### 5. Crear datos iniciales
-
-Los datos de ejemplo se cargan automáticamente desde el frontend cuando abres la app por primera vez. 
-Puedes crear nuevos usuarios en `/register` y completar perfil de experto en `/profile/me`.
-
-## Desarrollo local (sin Docker)
-
-Puedes correr cada servicio individualmente:
-
-```bash
-cd services/auth-service
-pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8001
-```
-
-## Estructura del proyecto
-
-Ver `AGENT.md` para la documentación completa de arquitectura, endpoints, modelos de datos y convenciones de código.
-
-Guía visual (Fraunces + Geist, tokens shadcn): [`docs/design-system.md`](docs/design-system.md).
-
-## Flujo principal de demo
-
-1. Registro como estudiante → JWT
-2. Registro como tutor → completar perfil (especialidades + ubicación)
-3. Explorar tutores en lista y mapa (`/explore`)
-4. Ver perfil de tutor (`/profile/:id`)
-5. Iniciar chat → mensajes en tiempo real
-6. Tutor actualiza disponibilidad
-
----
-
-*Arquitectura objetivo documentada en `AGENT.md`*
+## Reparto del trabajo
+| Integrante | Qué construyó |
+|---|---|
+| Nombre 1 | auth-service, seed, JWT |
+| Nombre 2 | media-service, imágenes, pruebas |
+| Nombre 3 | gateway, despliegue |

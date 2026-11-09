@@ -15,7 +15,6 @@ export const toMessageDto = (m) => ({
   created_at: m.createdAt,
 });
 
-// Frame pushed through WebSocket. Superset of the Python one ({conversation_id, sender_id, content}).
 export const toRealtimeMessageDto = (m) => ({
   id: m.id,
   conversation_id: m.conversationId,

@@ -9,7 +9,6 @@ import { AuthController } from './presentation/controllers/auth.controller.js';
 import { createAuthenticate } from './presentation/middlewares/authenticate.js';
 import { createAuthRouter } from './presentation/routes/auth.routes.js';
 
-// Composition root: the only place where layers are wired together.
 export function buildContainer() {
   const authService = new AuthService({
     userRepository: new UserRepository(pool),

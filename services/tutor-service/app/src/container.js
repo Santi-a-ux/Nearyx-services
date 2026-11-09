@@ -18,8 +18,6 @@ import { NetworkController } from './presentation/controllers/network.controller
 import { createAuthenticate } from './presentation/middlewares/authenticate.js';
 import { createTutorRouter } from './presentation/routes/tutor.routes.js';
 
-// Composition root: the only place where layers are wired together.
-// `embedder` can be replaced (tests, scripts): it only needs embedPassage(text) and embedQuery(text).
 export function buildContainer({ embedder = new TransformersEmbedder(config.embeddings) } = {}) {
   const profileRepository = new TutorProfileRepository(pool);
   const ratingRepository = new RatingRepository(pool);

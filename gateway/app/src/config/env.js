@@ -1,6 +1,5 @@
 import 'dotenv/config';
 
-// path segment -> [env override, default URL]. Defaults are the docker-compose service names.
 const SERVICE_DEFS = {
   auth: ['AUTH_SERVICE_URL', 'https://authservice-1-fc6f.onrender.com'],
   users: ['USER_SERVICE_URL', 'https://userservice-1-jqgy.onrender.com'],
@@ -16,11 +15,8 @@ const withoutTrailingSlash = (url) => url.replace(/\/+$/, '');
 
 export const config = {
   port: Number(process.env.PORT ?? 8000),
-  // Free Render instances need ~1 min to wake up. On Vercel keep it below the function's maxDuration (60 s).
   timeoutMs: Number(process.env.GATEWAY_TIMEOUT_MS ?? 60000),
-  // Comma separated list of allowed browser origins. Empty = echo any origin (local development).
   corsOrigins: list(process.env.CORS_ORIGINS),
-  // If set, /wake requires ?key=<WAKE_KEY> (otherwise anyone could keep your free hours burning).
   wakeKey: process.env.WAKE_KEY ?? '',
   services: Object.fromEntries(
     Object.entries(SERVICE_DEFS).map(([name, [envName, fallback]]) => [

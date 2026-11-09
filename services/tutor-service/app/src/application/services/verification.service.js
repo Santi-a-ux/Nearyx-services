@@ -43,7 +43,6 @@ export class VerificationService {
     if (!existing) throw new NotFoundError('Solicitud no encontrada');
     if (existing.status !== 'pending') throw new BusinessRuleError('Esta solicitud ya fue revisada');
 
-    // Conditional update: if another admin reviewed it in between, nothing is written.
     const reviewed = await this.verificationRepository.review(requestId, {
       status,
       notes: notes || null,

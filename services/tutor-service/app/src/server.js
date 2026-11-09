@@ -12,8 +12,6 @@ const server = createApp(container).listen(config.port, () => {
   console.log(`TTP Tutor Service listening on port ${config.port}`);
 });
 
-// Load the embedding model in the background (the first run downloads ~470 MB). The service answers requests
-// meanwhile; only `?q=` searches wait for the model.
 async function backfillMissingEmbeddings({ profileRepository, embedder }) {
   const profiles = await profileRepository.listWithoutEmbedding();
   console.log(`[tutor-service] profiles without embedding: ${profiles.length}`);

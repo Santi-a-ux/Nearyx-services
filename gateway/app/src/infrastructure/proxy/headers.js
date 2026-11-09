@@ -1,4 +1,3 @@
-// RFC 9110 hop-by-hop headers: meaningful for one connection only, never forwarded.
 const HOP_BY_HOP = new Set([
   'connection', 'keep-alive', 'proxy-authenticate', 'proxy-authorization',
   'te', 'trailer', 'transfer-encoding', 'upgrade', 'proxy-connection',

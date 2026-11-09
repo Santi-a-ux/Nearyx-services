@@ -3,7 +3,6 @@ import type { Publication } from '../../domain/models/Publication';
 import type { PublicationChanges } from '../../domain/repository/IPublicationRepository';
 import { paginationQuerySchema, uuidSchema } from './common.dto';
 
-// Una cadena vacía llega desde formularios sin imagen: se trata como "sin imagen".
 const imageUrlSchema = z.preprocess(
   (value) => (value === '' ? null : value),
   z.string().url().max(500).nullish(),

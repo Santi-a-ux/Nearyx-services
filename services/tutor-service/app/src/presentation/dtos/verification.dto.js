@@ -1,4 +1,3 @@
-// Items are always emitted with every key (null when missing), like the Pydantic models of the Python service.
 const education = (i) => ({
   degree: i.degree,
   institution: i.institution,

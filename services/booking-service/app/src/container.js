@@ -8,7 +8,6 @@ import { BookingController } from './presentation/controllers/booking.controller
 import { createAuthenticate } from './presentation/middlewares/authenticate.js';
 import { createBookingRouter } from './presentation/routes/booking.routes.js';
 
-// Composition root: the only place where layers are wired together.
 export function buildContainer() {
   const bookingService = new BookingService({ bookingRepository: new BookingRepository(pool) });
   const identityService = new IdentityService({ tokenVerifier: new TokenVerifier(config.jwt) });

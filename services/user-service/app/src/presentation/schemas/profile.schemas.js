@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import { isUuid } from '../../domain/identifiers.js';
 
-// Limits match the users.profiles column sizes (the Python service answered 500 when they were exceeded).
 const text = (max) => z.string().max(max).nullish();
 
 export const createProfileSchema = z.object({

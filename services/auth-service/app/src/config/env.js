@@ -6,15 +6,12 @@ function required(name) {
   return value;
 }
 
-// En producción JWT_SECRET es obligatorio; el valor por defecto solo existe para desarrollo local.
 function jwtSecret() {
   return required('JWT_SECRET');
 }
 
 export const config = {
   port: Number(process.env.PORT ?? 8000),
-  // Lazy: only required when the database is actually used (e.g. not by scripts/generateTokens.js).
-  // Accepts the SQLAlchemy-style "postgresql+asyncpg://" URL as well.
   get databaseUrl() {
     return required('DATABASE_URL').replace(/^postgres(ql)?\+asyncpg:/, 'postgresql:');
   },

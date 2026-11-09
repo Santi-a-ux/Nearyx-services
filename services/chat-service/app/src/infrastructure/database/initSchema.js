@@ -1,6 +1,5 @@
 import { pool } from './pool.js';
 
-// Same DDL as ensure_schema_ready() in main.py (SQLAlchemy create_all), plus lookup indexes.
 const DDL = `
 CREATE SCHEMA IF NOT EXISTS chat;
 

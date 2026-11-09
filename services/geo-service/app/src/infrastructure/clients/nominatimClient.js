@@ -2,7 +2,6 @@ import { GeocodeResult } from '../../domain/entities/GeocodeResult.js';
 import { ReverseGeocodeResult } from '../../domain/entities/ReverseGeocodeResult.js';
 import { UpstreamHttpError } from '../../domain/errors/index.js';
 
-// Like Python's float(): fails loudly on missing / non-numeric values.
 function toFloat(value) {
   const n = Number(value);
   if (value === undefined || value === null || value === '' || Number.isNaN(n)) {

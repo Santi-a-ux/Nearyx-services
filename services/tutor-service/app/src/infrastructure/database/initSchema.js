@@ -1,8 +1,6 @@
 import { pool } from './pool.js';
 import { config } from '../../config/env.js';
 
-// Same DDL as ensure_schema_ready() in the Python main.py (the `embedding` column is declared there
-// only through the SQLAlchemy model, so it is added here for fresh databases).
 const DDL = `
 CREATE SCHEMA IF NOT EXISTS users;
 CREATE SCHEMA IF NOT EXISTS tutors;
@@ -88,8 +86,6 @@ UPDATE tutors.profiles p
 export async function initSchema() {
   await pool.query(DDL);
 
-  // pgvector is required: TutorProfileRepository.create()/update() always write the `embedding` column,
-  // so without it creating a tutor profile would fail at runtime. Fail fast with a clear message instead.
   try {
     await pool.query('CREATE EXTENSION IF NOT EXISTS vector');
     await pool.query(

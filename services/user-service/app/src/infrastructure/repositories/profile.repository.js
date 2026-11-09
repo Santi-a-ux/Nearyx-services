@@ -37,7 +37,6 @@ export class ProfileRepository {
       );
       return toEntity(rows[0]);
     } catch (err) {
-      // Two concurrent creates for the same user: the UNIQUE(user_id) constraint decides.
       if (err.code === UNIQUE_VIOLATION) throw new ProfileAlreadyExistsError();
       throw err;
     }

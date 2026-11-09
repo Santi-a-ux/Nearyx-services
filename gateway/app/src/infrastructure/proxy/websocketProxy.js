@@ -55,7 +55,6 @@ export function attachWebSocketProxy(server, { registry }) {
       clientSocket.on('close', forget);
     });
 
-    // The service refused the upgrade (e.g. 401/404): relay its answer as is.
     proxyReq.on('response', (proxyRes) => {
       clientSocket.write(rawHead(`HTTP/1.1 ${proxyRes.statusCode} ${proxyRes.statusMessage}`, proxyRes.rawHeaders));
       proxyRes.pipe(clientSocket);

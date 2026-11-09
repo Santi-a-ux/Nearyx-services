@@ -6,8 +6,6 @@ function required(name) {
   return value;
 }
 
-// Same normalization as _normalize_redis_url() in the Python service:
-// localhost / ttp-redis resolve to the compose service name "redis".
 function normalizeRedisUrl(raw) {
   try {
     const url = new URL(raw);
@@ -23,14 +21,12 @@ function normalizeRedisUrl(raw) {
   return raw;
 }
 
-// En producción JWT_SECRET es obligatorio; el valor por defecto solo existe para desarrollo local.
 function jwtSecret() {
   return required('JWT_SECRET');
 }
 
 export const config = {
   port: Number(process.env.PORT ?? 8000),
-  // Accepts the SQLAlchemy-style "postgresql+asyncpg://" URL as well
   databaseUrl: required('DATABASE_URL').replace(/^postgres(ql)?\+asyncpg:/, 'postgresql:'),
   redisUrl: normalizeRedisUrl(process.env.REDIS_URL ?? 'redis://ttp-redis:6379/1'),
   jwt: {

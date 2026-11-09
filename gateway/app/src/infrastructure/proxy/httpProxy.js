@@ -40,7 +40,6 @@ export function createHttpProxy({ registry, timeoutMs }) {
       sendError(res, status, `${status === 504 ? 'Gateway Timeout' : 'Bad Gateway'}: ${err.message}`);
     });
 
-    // Client went away before the answer: stop talking to the service.
     res.on('close', () => { if (!res.writableFinished) proxyReq.destroy(); });
 
     req.pipe(proxyReq);

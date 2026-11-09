@@ -6,7 +6,6 @@ import { toVectorLiteral } from './vector.js';
 
 const UNIQUE_VIOLATION = '23505';
 
-// `embedding` is deliberately not selected: it is only written / compared, never returned.
 const COLS = `id, user_id, specialties, categories, is_available, hourly_rate, years_experience,
   verification_status, preferred_payment_method, created_at, updated_at,
   ST_Y(coordinates) AS lat, ST_X(coordinates) AS lng`;
@@ -30,7 +29,6 @@ const toEntity = (row) =>
       })
     : null;
 
-// A point is only used when lat, lng and radius are all present.
 const geoParams = ({ lat, lng, radius } = {}) =>
   lat != null && lng != null && radius != null ? [lat, lng, radius] : [null, null, null];
 
@@ -71,7 +69,6 @@ export class TutorProfileRepository {
       );
       return toEntity(rows[0]);
     } catch (err) {
-      // Two concurrent creates for the same user: UNIQUE(user_id) decides.
       if (err.code === UNIQUE_VIOLATION) throw new BusinessRuleError('Profile already exists');
       throw err;
     }

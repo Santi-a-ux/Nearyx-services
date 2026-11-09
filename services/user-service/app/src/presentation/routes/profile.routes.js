@@ -11,7 +11,6 @@ export function createProfileRouter({ profileController, imageController, authen
   router.get('/profiles/me', authenticate, profileController.getMine);
   router.put('/profiles/me', authenticate, validate('body', updateProfileSchema), profileController.updateMine);
   router.post('/profiles/avatar', authenticate, uploadAvatar, imageController.uploadAvatar);
-  // Public; must stay after /profiles/me so "me" is not read as a user_id.
   router.get('/profiles/:user_id', validate('params', userIdParamSchema), profileController.getByUserId);
 
   return router;

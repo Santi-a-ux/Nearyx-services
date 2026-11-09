@@ -1,4 +1,3 @@
-// Validates req.body with a zod schema. Error shape mimics FastAPI's 422 response.
 export const validate = (schema) => (req, res, next) => {
   const result = schema.safeParse(req.body);
   if (!result.success) {

@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
-    "generate-tokens": "node scripts/generateTokens.js"
+    "generate-tokens": "node scripts/generateTokens.js",
+    "seed": "node scripts/seed.js"
   },
   "engines": {
     "node": ">=20"

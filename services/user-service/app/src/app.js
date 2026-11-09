@@ -5,8 +5,6 @@ import { errorHandler } from './presentation/middlewares/errorHandler.js';
 export function createApp({ profileRouter }) {
   const app = express();
 
-  // Same behavior as FastAPI's CORSMiddleware(allow_origins=["*"], allow_credentials=True):
-  // the request's Origin is echoed back.
   app.use(cors({ origin: true, credentials: true }));
   app.use(express.json());
 

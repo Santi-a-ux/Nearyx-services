@@ -1,4 +1,3 @@
-// Mirrors FastAPI's OAuth2PasswordBearer: a missing/malformed header is a 401 "Not authenticated".
 export const createAuthenticate = (identityService) => (req, res, next) => {
   const [scheme, token] = (req.headers.authorization ?? '').split(' ');
   if (scheme?.toLowerCase() !== 'bearer' || !token) {

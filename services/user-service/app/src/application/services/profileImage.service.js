@@ -16,7 +16,6 @@ export class ProfileImageService {
     const contentType = file.mimetype || 'image/jpeg';
     if (!contentType.startsWith('image/')) throw new InvalidImageTypeError();
 
-    // The profile is checked before uploading (the Python service uploaded first, leaving orphan files).
     const profile = await this.profileRepository.findByUserId(userId);
     if (!profile) throw new ProfileNotFoundError();
 

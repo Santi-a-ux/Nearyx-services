@@ -64,7 +64,6 @@ export function buildMediaRouter(): Router {
     remove: new DeleteFile(files, storage),
   });
 
-  // El orden importa: posts, admin y comentarios antes de "/:file_id".
   const mediaRouter = Router();
   mediaRouter.use(createPublicationRouter(publicationController, authenticate));
   mediaRouter.use('/admin', createAdminRouter(adminController, authenticate));

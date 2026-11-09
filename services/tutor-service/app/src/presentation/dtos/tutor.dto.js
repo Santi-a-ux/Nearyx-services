@@ -14,7 +14,6 @@ export const toTutorDto = (p) => ({
   updated_at: p.updatedAt,
 });
 
-// snake_case request body -> camelCase application input (undefined/null = "not sent")
 export const toProfileInput = (b) => ({
   specialties: b.specialties,
   categories: b.categories,

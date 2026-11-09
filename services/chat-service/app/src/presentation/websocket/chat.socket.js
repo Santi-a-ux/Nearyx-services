@@ -48,7 +48,6 @@ export function attachChatSocket(server, { identityService, chatService, userCha
         /* try the next candidate */
       }
     }
-    // Same close code as the Python service when the token is missing/invalid or belongs to someone else.
     if (!identity || identity.userId !== clientId) return ws.close(POLICY_VIOLATION);
 
     const { userId } = identity;
@@ -83,7 +82,6 @@ export function attachChatSocket(server, { identityService, chatService, userCha
       }
     };
 
-    // Frames of one socket are processed in order.
     let queue = Promise.resolve();
     ws.on('message', (raw) => { queue = queue.then(() => handleFrame(raw)); });
 
@@ -92,7 +90,6 @@ export function attachChatSocket(server, { identityService, chatService, userCha
     });
   });
 
-  // Drops half-open connections (browsers closed without a FIN, proxies idling out).
   const heartbeat = setInterval(() => {
     for (const ws of wss.clients) {
       if (!ws.isAlive) { ws.terminate(); continue; }

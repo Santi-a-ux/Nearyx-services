@@ -20,7 +20,6 @@ export class NetworkService {
       edges.push(edge);
     };
 
-    // Hop 1: my direct connections
     const hop1Targets = new Set();
     for (const edge of await this.networkRepository.directEdgesFor([userId])) {
       addEdge(edge);
@@ -28,7 +27,6 @@ export class NetworkService {
       hop1Targets.add(edge.target);
     }
 
-    // Hop 2: direct connections of my contacts (even if I do not know the other person)
     if (hop1Targets.size > 0) {
       for (const edge of await this.networkRepository.directEdgesFor([...hop1Targets])) {
         if (edge.target === userId) continue; // already represented by my own direct edge
@@ -40,8 +38,6 @@ export class NetworkService {
     nodeIds.delete(userId);
     const nodes = nodeIds.size > 0 ? await this.networkRepository.nodesFor([...nodeIds]) : [];
 
-    // Inactive/deleted users have no node, so an edge pointing at them would dangle (graph libraries
-    // fail on links to unknown nodes). The Python service returned those edges anyway.
     const known = new Set([userId, ...nodes.map((n) => n.userId)]);
     return { userId, nodes, edges: edges.filter((e) => known.has(e.source) && known.has(e.target)) };
   }
